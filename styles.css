@@ -3,3 +3,44 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+.main-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.calculator {
+    border: 5px solid #5a5a5a;
+}
+
+.display {
+    height: 40px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    border-bottom: 1px solid #5a5a5a;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.row {
+    display: flex;
+}
+
+button {
+    width: 50px;
+    height: 50px;
+    margin: 3px;
+    border-radius: 50%;
+}
+
+.zero {
+    flex-grow: 1;
+    border-radius: 25px;
+}
