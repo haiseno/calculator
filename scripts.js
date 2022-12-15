@@ -88,3 +88,21 @@ function operation(e) {
     //Reset the displayValue for next input, the actual display (innerHTML) will update in number button click function input
     displayValue = "";
 }
+
+const equals = document.querySelector(".equal");
+equals.addEventListener("click", compute);
+
+//Computes the operation using above global variables (firstOperand, secondOperand, and operator) when equals sign is clicked
+function compute() {
+
+    //If secondOperand is undefined, set secondOperand as currentDisplay value since firstOperand was already stored before "equals" sign was clicked
+    if (!secondOperand) {
+        secondOperand = displayValue;
+    }
+
+    //Compute the operation only when everything is defined
+    if (operator && firstOperand && secondOperand) {
+        displayValue = operate(operator, Number(firstOperand), Number(secondOperand));
+        display.innerHTML = displayValue;
+    }
+}
