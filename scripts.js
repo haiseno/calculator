@@ -40,3 +40,21 @@ function operate(operator, a, b) {
             return "Error."
     }
 }
+
+const display = document.querySelector(".display");
+const numberButtons = document.querySelectorAll(".number");
+numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
+
+let displayValue = "";
+
+//Populate the display with user button inputs
+function input(e) {
+    const displayNumber = e.currentTarget.textContent;
+    displayValue += displayNumber;
+    display.innerHTML = displayValue;
+
+    //Maximum input of 9 numbers, then number buttons do nothing
+    if (displayValue.length === 9) {
+        numberButtons.forEach(numberButton => numberButton.removeEventListener("click", input))
+    }
+}
