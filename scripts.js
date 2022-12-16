@@ -114,7 +114,7 @@ function compute() {
     if (operator && firstOperand && secondOperand) {
         answer = operate(operator, Number(firstOperand), Number(secondOperand));
         if (hasDecimal(answer)) {
-            answer = Number(decimalRounder(answer));
+            answer = decimalRounder(answer);
         }
         display.innerHTML = answer;
     }
@@ -125,7 +125,7 @@ function decimalRounder(num) {
     let numberArray = num.toString().split(".");
     let beforeDecimalCount = numberArray[0].length;
     let maxDecimals = 9 - beforeDecimalCount;
-    return Number(numberArray.join(".")).toFixed(maxDecimals);
+    return Number(Number(numberArray.join(".")).toFixed(maxDecimals));
 }
 
 function hasDecimal(number) {
