@@ -113,6 +113,21 @@ function compute() {
     //Compute the operation only when everything is defined
     if (operator && firstOperand && secondOperand) {
         answer = operate(operator, Number(firstOperand), Number(secondOperand));
+        if (hasDecimal(answer)) {
+            answer = Number(decimalRounder(answer));
+        }
         display.innerHTML = answer;
     }
+}
+
+//Converts a number to a string then rounds the decimal places for the entire number to be a length of 9 (10 including decimal place)
+function decimalRounder(num) {
+    let numberArray = num.toString().split(".");
+    let beforeDecimalCount = numberArray[0].length;
+    let maxDecimals = 9 - beforeDecimalCount;
+    return Number(numberArray.join(".")).toFixed(maxDecimals);
+}
+
+function hasDecimal(number) {
+    return number - Math.floor(number) !== 0;
 }
