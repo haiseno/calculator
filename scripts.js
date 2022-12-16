@@ -66,6 +66,7 @@ operators.forEach(operator => operator.addEventListener("click", operation));
 let firstOperand;
 let secondOperand;
 let operator;
+let answer;
 
 //Store the operator and existing display number as operands
 function operation(e) {
@@ -102,7 +103,7 @@ function compute() {
 
     //Compute the operation only when everything is defined
     if (operator && firstOperand && secondOperand) {
-        displayValue = operate(operator, Number(firstOperand), Number(secondOperand));
-        display.innerHTML = displayValue;
+        answer = operate(operator, Number(firstOperand), Number(secondOperand));
+        display.innerHTML = answer;
     }
 }
