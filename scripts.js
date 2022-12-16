@@ -71,23 +71,31 @@ let answer;
 //Store the operator and existing display number as operands
 function operation(e) {
 
-    //First, re-add the event listener for number buttons in case it was removed previously (if currentInputValue reached 9)
+    //Re-add the event listener for number buttons in case it was removed previously (if currentInputValue reached 9)
     numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
 
-    //Save operator in global variable
-    operator = e.currentTarget.id;
-
-    //Assign user input value to global operand variables while resetting temp "holder" variable of currentInputValue for new user input
-    if (!firstOperand) {
-        firstOperand = currentInputValue;
-        currentInputValue = "";
-    }
-    else if (!secondOperand) {
-        secondOperand = currentInputValue;
+    if (operator) {
         compute();
+        operator = e.currentTarget.id;
         firstOperand = answer;
         secondOperand = 0;
         currentInputValue = "";
+    }
+    else {
+        operator = e.currentTarget.id;
+
+        //Assign user input value to global operand variables while resetting temp "holder" variable of currentInputValue for new user input
+        if (!firstOperand) {
+            firstOperand = currentInputValue;
+            currentInputValue = "";
+        }
+        else if (!secondOperand) {
+            secondOperand = currentInputValue;
+            compute();
+            firstOperand = answer;
+            secondOperand = 0;
+            currentInputValue = "";
+        }
     }
 }
 
