@@ -45,16 +45,16 @@ const display = document.querySelector(".display");
 const numberButtons = document.querySelectorAll(".number");
 numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
 
-let displayValue = ""; //Global variable to store the numbers in display window
+let currentInputValue = ""; //Global variable to store the numbers in display window
 
 //Populate the display with user button inputs
 function input(e) {
     const displayNumber = e.currentTarget.textContent;
-    displayValue += displayNumber;
-    display.innerHTML = displayValue;
+    currentInputValue += displayNumber;
+    display.innerHTML = currentInputValue;
 
     //Maximum input of 9 numbers, then number buttons do nothing
-    if (displayValue.length === 9) {
+    if (currentInputValue.length === 9) {
         numberButtons.forEach(numberButton => numberButton.removeEventListener("click", input))
     }
 }
@@ -71,23 +71,24 @@ let answer;
 //Store the operator and existing display number as operands
 function operation(e) {
 
-    //First, re-add the event listener for number buttons in case it was removed previously (if displayValue reached 9)
+    //First, re-add the event listener for number buttons in case it was removed previously (if currentInputValue reached 9)
     numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
 
     //Save operator in global variable
     operator = e.currentTarget.id;
 
-    //Store the displayValue as the first operand if first operand isn't already defined, otherwise, store as second operand if second operand isn't already defined.
-    //if both defined, doesn't update the value here
+    //Assign user input value to global operand variables while resetting temp "holder" variable of currentInputValue for new user input
     if (!firstOperand) {
-        firstOperand = displayValue;
+        firstOperand = currentInputValue;
+        currentInputValue = "";
     }
     else if (!secondOperand) {
-        secondOperand = displayValue;
+        secondOperand = currentInputValue;
+        compute();
+        firstOperand = answer;
+        secondOperand = 0;
+        currentInputValue = "";
     }
-
-    //Reset the displayValue for next input, the actual display (innerHTML) will update in number button click function input
-    displayValue = "";
 }
 
 const equals = document.querySelector(".equal");
@@ -98,7 +99,7 @@ function compute() {
 
     //If secondOperand is undefined, set secondOperand as currentDisplay value since firstOperand was already stored before "equals" sign was clicked
     if (!secondOperand) {
-        secondOperand = displayValue;
+        secondOperand = currentInputValue;
     }
 
     //Compute the operation only when everything is defined
