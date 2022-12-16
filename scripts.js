@@ -77,9 +77,11 @@ function operation(e) {
     if (operator) {
         compute();
         operator = e.currentTarget.id;
-        firstOperand = answer;
-        secondOperand = 0;
-        currentInputValue = "";
+        if(answer) {
+            firstOperand = answer;
+            secondOperand = 0;
+            currentInputValue = "";
+        }
     }
     else {
         operator = e.currentTarget.id;
