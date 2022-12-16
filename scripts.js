@@ -108,7 +108,7 @@ equals.addEventListener("click", compute);
 function compute() {
 
     //If secondOperand is undefined, set secondOperand as currentDisplay value since firstOperand was already stored before "equals" sign was clicked
-    if (!secondOperand) {
+    if (firstOperand && !secondOperand) {
         secondOperand = currentInputValue;
     }
 
