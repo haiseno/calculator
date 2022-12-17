@@ -76,8 +76,13 @@ function operation(e) {
     //Re-add the event listener for number buttons in case it was removed previously (if currentInputValue reached 9)
     numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
 
-    if (equalsPressed) {
+    if (equalsPressed && operator !== "divide") {
         currentInputValue = "";
+        equalsPressed = false;
+    }
+    else if (equalsPressed && operator === "divide") {
+        currentInputValue = "";
+        operator = e.currentTarget.id;
         equalsPressed = false;
     }
 
@@ -126,7 +131,7 @@ function compute() {
     }
 
     //Compute the operation only when everything is defined
-    if (operator && firstOperand && secondOperand !== "0") {
+    if (operator && firstOperand && secondOperand !== "0" && currentInputValue) {
         answer = operate(operator, Number(firstOperand), Number(secondOperand));
         if (hasDecimal(answer)) {
             answer = decimalRounder(answer);
