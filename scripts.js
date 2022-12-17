@@ -68,14 +68,22 @@ let secondOperand;
 let operator;
 let answer;
 
+let equalsPressed = false;
+
 //Store the operator and existing display number as operands
 function operation(e) {
 
     //Re-add the event listener for number buttons in case it was removed previously (if currentInputValue reached 9)
     numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
 
-    if (operator) {
+    if (equalsPressed) {
+        currentInputValue = "";
+        equalsPressed = false;
+    }
+
+    if (operator && !equalsPressed) {
         compute();
+        equalsPressed = false;
         operator = e.currentTarget.id;
         if(answer) {
             firstOperand = answer;
@@ -86,17 +94,20 @@ function operation(e) {
     else {
         operator = e.currentTarget.id;
 
-        //Assign user input value to global operand variables while resetting temp "holder" variable of currentInputValue for new user input
-        if (!firstOperand) {
-            firstOperand = currentInputValue;
-            currentInputValue = "";
-        }
-        else if (!secondOperand) {
-            secondOperand = currentInputValue;
-            compute();
-            firstOperand = answer;
-            secondOperand = 0;
-            currentInputValue = "";
+        if (operator && !equalsPressed) {
+            //Assign user input value to global operand variables while resetting temp "holder" variable of currentInputValue for new user input
+            if (!firstOperand) {
+                firstOperand = currentInputValue;
+                currentInputValue = "";
+            }
+            else if (!secondOperand) {
+                secondOperand = currentInputValue;
+                compute();
+                equalsPressed = false;
+                firstOperand = answer;
+                secondOperand = 0;
+                currentInputValue = "";
+            }
         }
     }
 }
@@ -107,8 +118,10 @@ equals.addEventListener("click", compute);
 //Computes the operation using above global variables (firstOperand, secondOperand, and operator) when equals sign is clicked
 function compute() {
 
+    equalsPressed = true;
+
     //If secondOperand is undefined, set secondOperand as currentDisplay value since firstOperand was already stored before "equals" sign was clicked
-    if (firstOperand && !secondOperand) {
+    if (firstOperand && currentInputValue && !secondOperand) {
         secondOperand = currentInputValue;
     }
 
@@ -118,6 +131,8 @@ function compute() {
         if (hasDecimal(answer)) {
             answer = decimalRounder(answer);
         }
+        firstOperand = answer;
+        secondOperand = 0;
         display.innerHTML = answer;
     }
 }
