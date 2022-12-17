@@ -91,7 +91,7 @@ function operation(e) {
             currentInputValue = "";
         }
     }
-    else {
+    else if (currentInputValue) {
         operator = e.currentTarget.id;
 
         if (operator && !equalsPressed) {
@@ -126,7 +126,7 @@ function compute() {
     }
 
     //Compute the operation only when everything is defined
-    if (operator && firstOperand && secondOperand) {
+    if (operator && firstOperand && secondOperand !== "0") {
         answer = operate(operator, Number(firstOperand), Number(secondOperand));
         if (hasDecimal(answer)) {
             answer = decimalRounder(answer);
@@ -134,6 +134,10 @@ function compute() {
         firstOperand = answer;
         secondOperand = 0;
         display.innerHTML = answer;
+    }
+    else if (secondOperand === "0") {
+        allClear()
+        display.innerHTML = "Divide by zero...?";
     }
 }
 
