@@ -148,3 +148,16 @@ function decimalRounder(num) {
 function hasDecimal(number) {
     return number - Math.floor(number) !== 0;
 }
+
+const clear = document.querySelector(".clear");
+clear.addEventListener("click", allClear)
+
+function allClear() {
+    currentInputValue = "";
+    display.innerHTML = 0;
+    firstOperand = void 0;
+    secondOperand = void 0;
+    answer = void 0;
+    operator = void 0;
+    equalsPressed = false;
+}
