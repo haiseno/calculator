@@ -170,3 +170,14 @@ function allClear() {
     operator = void 0;
     equalsPressed = false;
 }
+
+const decimal = document.querySelector(".decimal");
+decimal.addEventListener("click", addDecimal);
+
+function addDecimal(e) {
+    if (!currentInputValue.includes(".")) {
+        const decimalPoint = e.currentTarget.textContent;
+        currentInputValue += decimalPoint;
+        display.innerHTML = currentInputValue;
+    }
+}
