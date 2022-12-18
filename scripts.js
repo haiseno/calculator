@@ -77,8 +77,15 @@ function operation(e) {
     numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
 
     if (equalsPressed && operator !== "divide") {
-        currentInputValue = "";
-        equalsPressed = false;
+        if (firstOperand) {
+            currentInputValue = "";
+            equalsPressed = false;
+        }
+        else {
+            firstOperand = currentInputValue;
+            currentInputValue = "";
+            operator = e.currentTarget.id;
+        }
     }
     else if (equalsPressed && operator === "divide") {
         currentInputValue = "";
