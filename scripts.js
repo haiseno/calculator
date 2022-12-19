@@ -188,3 +188,17 @@ function addDecimal(e) {
         display.innerHTML = currentInputValue;
     }
 }
+
+const sign = document.querySelector(".sign");
+sign.addEventListener("click", invertSign);
+
+function invertSign() {
+    if (!currentInputValue.includes("-")) {
+        currentInputValue = "-" + currentInputValue;
+        display.innerHTML = currentInputValue;
+    }
+    else {
+        currentInputValue = currentInputValue.slice(1);
+        display.innerHTML = currentInputValue;
+    }
+}
