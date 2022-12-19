@@ -207,6 +207,13 @@ const del = document.querySelector(".delete");
 del.addEventListener("click", deleteNumber);
 
 function deleteNumber() {
-    currentInputValue = currentInputValue.slice(0, currentInputValue.length - 1);
-    display.innerHTML = currentInputValue;
+    if (currentInputValue !== "") {
+        currentInputValue = currentInputValue.slice(0, currentInputValue.length - 1);
+        if (currentInputValue === "") {
+            display.innerHTML = 0;
+        }
+        else {
+            display.innerHTML = currentInputValue;
+        }
+    }
 }
