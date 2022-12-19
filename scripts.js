@@ -202,3 +202,11 @@ function invertSign() {
         display.innerHTML = currentInputValue;
     }
 }
+
+const del = document.querySelector(".delete");
+del.addEventListener("click", deleteNumber);
+
+function deleteNumber() {
+    currentInputValue = currentInputValue.slice(0, currentInputValue.length - 1);
+    display.innerHTML = currentInputValue;
+}
