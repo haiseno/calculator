@@ -130,7 +130,9 @@ equals.addEventListener("click", compute);
 //Computes the operation using above global variables (firstOperand, secondOperand, and operator) when equals sign is clicked
 function compute() {
 
-    equalsPressed = true;
+    if (firstOperand && currentInputValue) {
+        equalsPressed = true;
+    }
 
     //If secondOperand is undefined, set secondOperand as currentDisplay value since firstOperand was already stored before "equals" sign was clicked
     if (firstOperand && currentInputValue && !secondOperand) {
@@ -138,18 +140,20 @@ function compute() {
     }
 
     //Compute the operation only when everything is defined
-    if (operator && firstOperand && secondOperand !== "0" && currentInputValue) {
-        answer = operate(operator, Number(firstOperand), Number(secondOperand));
-        if (hasDecimal(answer)) {
-            answer = decimalRounder(answer);
+    if (operator && firstOperand && secondOperand && currentInputValue) {
+        if (operator === "divide" && secondOperand === "0") {
+            allClear()
+            display.innerHTML = "Divide by zero...?";
         }
-        firstOperand = answer;
-        secondOperand = 0;
-        display.innerHTML = answer;
-    }
-    else if (secondOperand === "0") {
-        allClear()
-        display.innerHTML = "Divide by zero...?";
+        else {
+            answer = operate(operator, Number(firstOperand), Number(secondOperand));
+            if (hasDecimal(answer)) {
+                answer = decimalRounder(answer);
+            }
+            firstOperand = answer;
+            secondOperand = 0;
+            display.innerHTML = answer;
+        }
     }
 }
 
