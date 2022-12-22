@@ -50,8 +50,8 @@ let answer;
 let equalsPressed = false; //Switch-like variable to keep track of whether computation result was from explictly pressing equals sign or from chaining operations in operator function below
 
 //Is the operand/number a truthy and valid value, including number 0
-function exists(operand) {
-    return operand || operand === 0;
+function exists(variable) {
+    return variable || variable === 0;
 }
 
 const display = document.querySelector(".display");
@@ -68,13 +68,12 @@ function input(e) {
         allClear();
     }
 
-    //Checks if it's the very start of the calculation to clear out the default 0 set above into an empty string for concatenation
-    //Or if the user inputted 0 manually, it also won't concatenate multiple leading 0s
+    //Prevents concatenation of multiple leading 0s
     if (currentInputValue === 0 || currentInputValue === "0") {
         currentInputValue = "";
     }
     //Checks if the negative/invert sign button was pressed at the beginning to prevent concatenation of leading 0
-    else if (currentInputValue.toString().includes("-") && currentInputValue.toString().charAt(1) === "0") {
+    else if (currentInputValue.toString().includes("-") && currentInputValue.toString().charAt(1) === "0" && !currentInputValue.toString().includes(".")) {
         currentInputValue = "-";
     }
 
@@ -83,8 +82,12 @@ function input(e) {
     currentInputValue += displayNumber;
     display.textContent = currentInputValue;
     
-    //Maximum input of 9 numbers, then disable number buttons
-    if (currentInputValue.length === 9) {
+    //Maximum input of 9 numbers (or 10 if there's a negative sign), then disable number buttons
+    if ((!currentInputValue.toString().includes("-") && !currentInputValue.toString().includes(".")) && currentInputValue.length === 9) {
+        numberButtons.forEach(numberButton => numberButton.removeEventListener("click", input))
+        numButtonsEvent = false;
+    }
+    else if (currentInputValue.length === 10) {
         numberButtons.forEach(numberButton => numberButton.removeEventListener("click", input))
         numButtonsEvent = false;
     }
@@ -125,7 +128,7 @@ function reset() {
     firstOperand = answer; //Answer from previous calculation is stored as first operand
     secondOperand = void 0; //Reset for new input
     currentInputValue = 0; //Reset for new input
-    answer = void 0;
+
     equalsPressed = false; //Turn off switch because we are computing not by pressing equals button
 }
 
@@ -258,6 +261,10 @@ function deleteNumber() {
     if (currentInputValue === "") {
         currentInputValue = 0;
         display.textContent = 0;
+    }
+    else if (currentInputValue === "-") {
+        currentInputValue = "-0";
+        display.textContent = "-0";
     }
     else {
         display.textContent = currentInputValue;
