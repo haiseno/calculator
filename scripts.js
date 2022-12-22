@@ -207,6 +207,10 @@ const decimal = document.querySelector(".decimal");
 decimal.addEventListener("click", addDecimal);
 
 function addDecimal(e) {
+    if (equalsPressed) {
+        allClear();
+    }
+
     if (!currentInputValue.toString().includes(".")) {
         const decimalPoint = e.currentTarget.textContent;
         currentInputValue += decimalPoint;
@@ -219,6 +223,10 @@ const sign = document.querySelector(".sign");
 sign.addEventListener("click", invertSign);
 
 function invertSign() {
+    if (equalsPressed) {
+        allClear();
+    }
+
     //If current input value is positive, add a negative sign to the front
     if (!currentInputValue.toString().includes("-")) {
         currentInputValue = "-" + currentInputValue;
@@ -238,6 +246,10 @@ del.addEventListener("click", deleteNumber);
 function deleteNumber() {
     if (!numButtonsEvent) {
         numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
+    }
+
+    if (equalsPressed) {
+        allClear();
     }
 
     currentInputValue = currentInputValue.toString().slice(0, currentInputValue.length - 1);
