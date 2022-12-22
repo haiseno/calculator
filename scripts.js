@@ -141,7 +141,7 @@ function compute() {
     }
 
     //If second operand is undefined, assign current input value as second operand since first operand is already defined
-    if (firstOperand && !exists(secondOperand)) {
+    if (exists(firstOperand) && !exists(secondOperand)) {
         secondOperand = Number(currentInputValue);
     }
 
