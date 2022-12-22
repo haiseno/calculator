@@ -63,6 +63,11 @@ let numButtonsEvent = true; //Keeps track if the numberButtons event is on
 //Populate the display with user button inputs
 function input(e) {
 
+    //The purpose of this equals pressed check is to ensure that any unintentional or intentional number button input following an operation will be regarded as starting anew
+    if (equalsPressed) {
+        allClear();
+    }
+
     //Checks if it's the very start of the calculation to clear out the default 0 set above into an empty string for concatenation
     //Or if the user inputted 0 manually, it also won't concatenate multiple leading 0s
     if (currentInputValue === 0 || currentInputValue === "0") {
@@ -77,7 +82,7 @@ function input(e) {
     const displayNumber = e.currentTarget.textContent;
     currentInputValue += displayNumber;
     display.textContent = currentInputValue;
-
+    
     //Maximum input of 9 numbers, then disable number buttons
     if (currentInputValue.length === 9) {
         numberButtons.forEach(numberButton => numberButton.removeEventListener("click", input))
@@ -96,8 +101,13 @@ function operation(e) {
         numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
     }
 
+    //The purpose of this equals pressed check is to allow the user to chain operations
+    if (equalsPressed) {
+        operator = e.currentTarget.id;
+        reset();
+    }
     //Assign current input value to the first operand if undefined, while also clearing out current input value for next user number input
-    if (!exists(firstOperand)) {
+    else if (!exists(firstOperand)) {
         firstOperand = Number(currentInputValue);
         operator = e.currentTarget.id;
         currentInputValue = 0;
@@ -158,8 +168,7 @@ function compute() {
         //Also allows for the increment/decremet feature mentioned above by only resetting the values to a semi-initial state, very similar to the reset() function above that is used in operator function
         firstOperand = answer;
         display.textContent = answer;
-        secondOperand = void 0;
-        answer = void 0;
+        currentInputValue = 0;
     }
 }
 
