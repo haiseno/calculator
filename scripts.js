@@ -76,6 +76,10 @@ function input(e) {
     const displayNumber = e.currentTarget.textContent;
     currentInputValue += displayNumber;
     display.textContent = currentInputValue;
+
+    if (endOfCalc) {
+        firstOperand = Number(currentInputValue);
+    }
     
     //Maximum input of 9 numbers (or 10 if there's a negative sign), then disable number buttons
     if ((!currentInputValue.toString().includes("-") && !currentInputValue.toString().includes(".")) && currentInputValue.length === 9) {
@@ -93,6 +97,14 @@ operators.forEach(operator => operator.addEventListener("click", operation));
 
 //Store the operator for operation and current input value as operands, computes the operation without needing to press equals button when chaining operations
 function operation(e) {
+
+    if (endOfCalc) {
+        currentInputValue = 0;
+        secondOperand = void 0;
+        answer = void 0;
+        operator = e.currentTarget.id;
+        endOfCalc = false;
+    }
 
     //Assign current input value to the first operand if undefined, while also clearing out current input value for next user number input
     if (!exists(firstOperand)) {
@@ -139,8 +151,11 @@ equals.addEventListener("click", compute);
 function compute() {
 
     //If second operand is undefined, assign current input value as second operand since first operand is already defined
-    if (exists(firstOperand) && !exists(secondOperand)) {
+    if (exists(firstOperand) && !secondOperand && currentInputValue) {
         secondOperand = Number(currentInputValue);
+    }
+    else if (exists(firstOperand) && !secondOperand && !currentInputValue) {
+        secondOperand = firstOperand;
     }
 
     //Checks for dividing by zero case
