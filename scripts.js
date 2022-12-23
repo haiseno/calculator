@@ -68,11 +68,12 @@ function input(e) {
         allClear();
     }
 
-    //Prevents concatenation of multiple leading 0s
+    //Prevents concatenation of multiple leading 0s and sets up current input value for user input concatenation
     if (currentInputValue === 0 || currentInputValue === "0") {
         currentInputValue = "";
     }
     //Checks if the negative/invert sign button was pressed at the beginning to prevent concatenation of leading 0
+    //Also verify that it doesn't include decimal "." otherwise example: "-0.2" would become "-2" when the "2" is inputted
     else if (currentInputValue.toString().includes("-") && currentInputValue.toString().charAt(1) === "0" && !currentInputValue.toString().includes(".")) {
         currentInputValue = "-";
     }
@@ -116,10 +117,15 @@ function operation(e) {
         currentInputValue = 0;
     }
     //Allows for chaining of operations and computing the answer to the display without having to press the equals button
-    else if (exists(firstOperand) && exists(currentInputValue) && operator) { //If an operator exists, meaning we are in the middle of operations (regular or chaining), compute the answer with existing operands and operator before saving the new operator that was pressed for next calculation. The new operator button acts as an equal sign
+    //If an operator exists, meaning we are in the middle of operations (regular or chaining), compute the answer with existing operands and operator before saving the new operator that was pressed for next calculation. The new operator button acts as an equal sign
+    else if (exists(firstOperand) && currentInputValue && operator) {
         compute();
         operator = e.currentTarget.id;
         reset();
+    }
+    //Allows user to change their operator choice midway through calculation
+    else {
+        operator = e.currentTarget.id;
     }
 }
 
@@ -128,7 +134,6 @@ function reset() {
     firstOperand = answer; //Answer from previous calculation is stored as first operand
     secondOperand = void 0; //Reset for new input
     currentInputValue = 0; //Reset for new input
-
     equalsPressed = false; //Turn off switch because we are computing not by pressing equals button
 }
 
