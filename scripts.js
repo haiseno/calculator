@@ -217,8 +217,21 @@ const sign = document.querySelector(".sign");
 sign.addEventListener("click", invertSign);
 
 function invertSign() {
+    //First part also allows user to invert sign of the result of their computation
+    if (exists(firstOperand) && exists(answer) && !currentInputValue) {
+        if (!firstOperand.toString().includes("-")) {
+            firstOperand = Number("-" + firstOperand);
+            answer = firstOperand;
+            display.textContent = firstOperand;
+        }
+        else {
+            firstOperand = Number(firstOperand.toString().slice(1));
+            answer = firstOperand;
+            display.textContent = firstOperand;
+        }
+    }
     //If current input value is positive, add a negative sign to the front
-    if (!currentInputValue.toString().includes("-")) {
+    else if (!currentInputValue.toString().includes("-")) {
         currentInputValue = "-" + currentInputValue;
         display.textContent = currentInputValue;
     }
@@ -253,13 +266,3 @@ function deleteNumber() {
         display.textContent = currentInputValue;
     }
 }
-
-
-document.addEventListener("click", () => {
-    console.log(`currentInVal: ${currentInputValue}`);
-    console.log(`first: ${firstOperand}`);
-    console.log(`second: ${secondOperand}`);
-    console.log(`answer: ${answer}`);
-    console.log(`operator: ${operator}`);
-    console.log(`canChainOp: ${canChainOp}`);
-});
