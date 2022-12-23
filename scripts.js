@@ -47,7 +47,7 @@ let firstOperand;
 let secondOperand;
 let operator;
 let answer;
-let canChainOp = false; //Switch-like variable to keep track of whether computation result was from explictly pressing equals sign or from chaining operations in operator function below
+let endOfCalc = false; //Switch-like variable to keep track of whether computation result was from explictly pressing equals sign or from chaining operations in operator function below
 
 //Is the operand/number a truthy and valid value, including number 0
 function exists(variable) {
@@ -108,7 +108,7 @@ function operation(e) {
         reset();
     }
     //The purpose of this is to allow the user to chain operations using their answer from pressing equals
-    else if (canChainOp) {
+    else if (endOfCalc) {
         operator = e.currentTarget.id;
         reset();
     }
@@ -128,7 +128,7 @@ function reset() {
     firstOperand = answer; //Answer from previous calculation is stored as first operand
     secondOperand = void 0; //Reset for new input
     currentInputValue = 0; //Reset for new input
-    canChainOp = false; //Turn off switch because we are computing not by pressing equals button
+    endOfCalc = false; //Turn off switch because we are computing not by pressing equals button
 }
 
 const equals = document.querySelector(".equal");
@@ -162,7 +162,7 @@ function compute() {
         firstOperand = answer;
         display.textContent = answer;
         currentInputValue = 0
-        canChainOp = true;
+        endOfCalc = true;
     }
 
     if (!numButtonsEvent) {
@@ -193,7 +193,7 @@ function allClear() {
     secondOperand = void 0;
     operator = void 0;
     answer = void 0;
-    canChainOp = false;
+    endOfCalc = false;
 
     if (!numButtonsEvent) {
         numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
