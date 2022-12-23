@@ -94,11 +94,6 @@ operators.forEach(operator => operator.addEventListener("click", operation));
 //Store the operator for operation and current input value as operands, computes the operation without needing to press equals button when chaining operations
 function operation(e) {
 
-    //Re-add the event listener for number buttons if it was removed previously during number button input
-    if (!numButtonsEvent) {
-        numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
-    }
-
     //Assign current input value to the first operand if undefined, while also clearing out current input value for next user number input
     if (!exists(firstOperand)) {
         firstOperand = Number(currentInputValue);
@@ -121,6 +116,11 @@ function operation(e) {
     else {
         operator = e.currentTarget.id;
     }
+
+    //Re-add the event listener for number buttons if it was removed previously during number button input
+    if (!numButtonsEvent) {
+        numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
+    }
 }
 
 //Sets the answer to the calculation as the first operand and resets calculator to be ready for further calculation
@@ -137,10 +137,6 @@ equals.addEventListener("click", compute);
 //Computes the operation
 //Pressing equals repeatedly after a calculation also has the added feature of incrementing/decrementing using the last operand and operator in memory
 function compute() {
-
-    if (!numButtonsEvent) {
-        numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
-    }
 
     //If second operand is undefined, assign current input value as second operand since first operand is already defined
     if (exists(firstOperand) && !exists(secondOperand)) {
@@ -167,6 +163,10 @@ function compute() {
         display.textContent = answer;
         currentInputValue = 0
         canChainOp = true;
+    }
+
+    if (!numButtonsEvent) {
+        numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
     }
 }
 
@@ -247,10 +247,6 @@ const del = document.querySelector(".delete");
 del.addEventListener("click", deleteNumber);
 
 function deleteNumber() {
-    if (!numButtonsEvent) {
-        numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
-    }
-
     currentInputValue = currentInputValue.toString().slice(0, currentInputValue.length - 1);
 
     //Does not delete current input value's default 0 to prevent unwanted empty current input value string
@@ -264,5 +260,9 @@ function deleteNumber() {
     }
     else {
         display.textContent = currentInputValue;
+    }
+
+    if (!numButtonsEvent) {
+        numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
     }
 }
