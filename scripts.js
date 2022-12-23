@@ -47,7 +47,7 @@ let firstOperand;
 let secondOperand;
 let operator;
 let answer;
-let equalsPressed = false; //Switch-like variable to keep track of whether computation result was from explictly pressing equals sign or from chaining operations in operator function below
+let canChainOp = false; //Switch-like variable to keep track of whether computation result was from explictly pressing equals sign or from chaining operations in operator function below
 
 //Is the operand/number a truthy and valid value, including number 0
 function exists(variable) {
@@ -62,12 +62,6 @@ let numButtonsEvent = true; //Keeps track if the numberButtons event is on
 
 //Populate the display with user button inputs
 function input(e) {
-
-    //The purpose of this equals pressed check is to ensure that any unintentional or intentional number button input following an operation will be regarded as starting anew
-    if (equalsPressed) {
-        allClear();
-    }
-
     //Prevents concatenation of multiple leading 0s and sets up current input value for user input concatenation
     if (currentInputValue === 0 || currentInputValue === "0") {
         currentInputValue = "";
@@ -105,13 +99,8 @@ function operation(e) {
         numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
     }
 
-    //The purpose of this equals pressed check is to allow the user to chain operations
-    if (equalsPressed) {
-        operator = e.currentTarget.id;
-        reset();
-    }
     //Assign current input value to the first operand if undefined, while also clearing out current input value for next user number input
-    else if (!exists(firstOperand)) {
+    if (!exists(firstOperand)) {
         firstOperand = Number(currentInputValue);
         operator = e.currentTarget.id;
         currentInputValue = 0;
@@ -120,6 +109,11 @@ function operation(e) {
     //If an operator exists, meaning we are in the middle of operations (regular or chaining), compute the answer with existing operands and operator before saving the new operator that was pressed for next calculation. The new operator button acts as an equal sign
     else if (exists(firstOperand) && currentInputValue && operator) {
         compute();
+        operator = e.currentTarget.id;
+        reset();
+    }
+    //The purpose of this is to allow the user to chain operations using their answer from pressing equals
+    else if (canChainOp) {
         operator = e.currentTarget.id;
         reset();
     }
@@ -134,7 +128,7 @@ function reset() {
     firstOperand = answer; //Answer from previous calculation is stored as first operand
     secondOperand = void 0; //Reset for new input
     currentInputValue = 0; //Reset for new input
-    equalsPressed = false; //Turn off switch because we are computing not by pressing equals button
+    canChainOp = false; //Turn off switch because we are computing not by pressing equals button
 }
 
 const equals = document.querySelector(".equal");
@@ -153,17 +147,12 @@ function compute() {
         secondOperand = Number(currentInputValue);
     }
 
-    //Equals pressed switch only turn on if operands and operators exist
-    if (exists(firstOperand) && exists(secondOperand) && operator) {
-        equalsPressed = true;
-    }
-
     //Checks for dividing by zero case
     if (secondOperand === 0 && operator === "divide") {
         allClear()
         display.textContent = "Divide by zero...?";
     }
-    //Computes only if everything is defined
+    //Computes only if everything is defined and allow chaining operation
     else if (exists(firstOperand) && exists(secondOperand) && operator) {
         answer = operate(operator, firstOperand, secondOperand);
 
@@ -176,7 +165,8 @@ function compute() {
         //Also allows for the increment/decremet feature mentioned above by only resetting the values to a semi-initial state, very similar to the reset() function above that is used in operator function
         firstOperand = answer;
         display.textContent = answer;
-        currentInputValue = 0;
+        currentInputValue = 0
+        canChainOp = true;
     }
 }
 
@@ -203,7 +193,7 @@ function allClear() {
     secondOperand = void 0;
     operator = void 0;
     answer = void 0;
-    equalsPressed = false;
+    canChainOp = false;
 
     if (!numButtonsEvent) {
         numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
@@ -215,10 +205,6 @@ const decimal = document.querySelector(".decimal");
 decimal.addEventListener("click", addDecimal);
 
 function addDecimal(e) {
-    if (equalsPressed) {
-        allClear();
-    }
-
     if (!currentInputValue.toString().includes(".")) {
         const decimalPoint = e.currentTarget.textContent;
         currentInputValue += decimalPoint;
@@ -231,10 +217,6 @@ const sign = document.querySelector(".sign");
 sign.addEventListener("click", invertSign);
 
 function invertSign() {
-    if (equalsPressed) {
-        allClear();
-    }
-
     //If current input value is positive, add a negative sign to the front
     if (!currentInputValue.toString().includes("-")) {
         currentInputValue = "-" + currentInputValue;
@@ -256,10 +238,6 @@ function deleteNumber() {
         numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
     }
 
-    if (equalsPressed) {
-        allClear();
-    }
-
     currentInputValue = currentInputValue.toString().slice(0, currentInputValue.length - 1);
 
     //Does not delete current input value's default 0 to prevent unwanted empty current input value string
@@ -275,3 +253,13 @@ function deleteNumber() {
         display.textContent = currentInputValue;
     }
 }
+
+
+document.addEventListener("click", () => {
+    console.log(`currentInVal: ${currentInputValue}`);
+    console.log(`first: ${firstOperand}`);
+    console.log(`second: ${secondOperand}`);
+    console.log(`answer: ${answer}`);
+    console.log(`operator: ${operator}`);
+    console.log(`canChainOp: ${canChainOp}`);
+});
