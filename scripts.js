@@ -62,6 +62,11 @@ let numButtonsEvent = true; //Keeps track if the numberButtons event is on
 
 //Populate the display with user button inputs
 function input(e) {
+    //In the invert sign function below, if the user inverts the sign, the current input value is set to equal the first operand value concatenated with a "-", this condition resets the current input value to default 0 for that specific scenario
+    if (endOfCalc && currentInputValue.toString().includes("-") && !currentInputValue.toString().includes(".")) {
+        currentInputValue = 0;
+    }
+
     //Prevents concatenation of multiple leading 0s and sets up current input value for user input concatenation
     if (currentInputValue === 0 || currentInputValue === "0") {
         currentInputValue = "";
@@ -164,7 +169,7 @@ function compute() {
     }
     //Computes only if everything is defined and allow chaining of operation
     else if (exists(firstOperand) && exists(secondOperand) && operator) {
-        answer = operate(operator, firstOperand, secondOperand);
+        answer = operate(operator, Number(firstOperand), Number(secondOperand));
 
         //Rounds the answer to not exceed display size limit
         if (hasDecimal(answer)) {
@@ -219,14 +224,16 @@ const decimal = document.querySelector(".decimal");
 decimal.addEventListener("click", addDecimal);
 
 function addDecimal(e) {
-    if (endOfCalc) {
-        firstOperand = Number(currentInputValue);
-    }
-
     if (!currentInputValue.toString().includes(".")) {
         const decimalPoint = e.currentTarget.textContent;
         currentInputValue += decimalPoint;
         display.textContent = currentInputValue;
+    }
+
+    //If user is attempting to input a decimal following a computation, it is most likely that they are  trying to start a new operation
+    //First operand delegation begins here instead of when the operator key is pressed, just like in number input function above
+    if (endOfCalc) {
+        firstOperand = currentInputValue;
     }
 }
 
@@ -235,17 +242,20 @@ const sign = document.querySelector(".sign");
 sign.addEventListener("click", invertSign);
 
 function invertSign() {
-    //First conditional allows user to invert sign of the result of their computation
+    //This case allows user to invert sign of the result of their computation
     if (exists(firstOperand) && endOfCalc) {
         if (!firstOperand.toString().includes("-")) {
-            firstOperand = Number("-" + firstOperand);
+            firstOperand = "-" + firstOperand;
             display.textContent = firstOperand;
+            currentInputValue = firstOperand;
         }
         else {
-            firstOperand = Number(firstOperand.toString().slice(1));
+            firstOperand = firstOperand.toString().slice(1);
             display.textContent = firstOperand;
+            currentInputValue = firstOperand;
         }
     }
+    //All other cases
     //If current input value is positive, add a negative sign to the front
     else if (!currentInputValue.toString().includes("-")) {
         currentInputValue = "-" + currentInputValue;
