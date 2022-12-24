@@ -292,3 +292,18 @@ function deleteNumber() {
         numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
     }
 }
+
+//Toggle operator CSS on click
+operators.forEach(operator => operator.addEventListener("click", () => {
+    //First, remove selected class from all operators
+    operators.forEach(nonOperator => {
+        if (nonOperator.classList.contains("selected")) {
+            nonOperator.classList.toggle("selected");
+        }
+    });
+
+    //If current operator does not have selected class, add it
+    if (!operator.classList.contains("selected")) {
+        operator.classList.toggle("selected");
+    }
+}));

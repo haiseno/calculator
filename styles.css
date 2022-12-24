@@ -4,6 +4,13 @@
     box-sizing: border-box;
 }
 
+body {
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 25px;
+    color: white;
+    background-color: black;
+}
+
 .main-container {
     height: 100vh;
     width: 100vw;
@@ -13,11 +20,13 @@
 }
 
 .calculator {
-    border: 5px solid #5a5a5a;
+    border: 5px solid #ffa500;
+    border-radius: 15px;
+    outline: 5px solid #5a5a5a;
 }
 
 .display {
-    height: 40px;
+    height: 80px;
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
@@ -38,9 +47,37 @@ button {
     height: 50px;
     margin: 3px;
     border-radius: 50%;
+    border: none;
+    cursor: pointer;
+}
+
+.non-operator {
+    color: white;
+    background-color: #3a3b3c;
+    font-size: 18px;
+}
+
+.row.five > .non-operator {
+    color: black;
+    background-color: #808080;
+    font-size: 15px;
+    font-weight: normal;
+}
+
+.operator,
+.equal {
+    color: white;
+    background-color: #ffa500;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .zero {
     flex-grow: 1;
     border-radius: 25px;
+}
+
+.selected {
+    color: #ffa500;
+    background-color: white;
 }
