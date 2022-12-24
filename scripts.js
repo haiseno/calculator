@@ -77,6 +77,8 @@ function input(e) {
     currentInputValue += displayNumber;
     display.textContent = currentInputValue;
 
+    //If user is inputting a number instead of an operator following a computation, the user is likely trying to start a new computation
+    //First operand delegation goes here instead of when operator key is pressed
     if (endOfCalc) {
         firstOperand = Number(currentInputValue);
     }
@@ -97,17 +99,16 @@ operators.forEach(operator => operator.addEventListener("click", operation));
 
 //Store the operator for operation and current input value as operands, computes the operation without needing to press equals button when chaining operations
 function operation(e) {
-
+    //Allow user to chain operations using result from their previous computation
     if (endOfCalc) {
-        currentInputValue = 0;
         secondOperand = void 0;
+        currentInputValue = 0;
         answer = void 0;
         operator = e.currentTarget.id;
         endOfCalc = false;
     }
-
     //Assign current input value to the first operand if undefined, while also clearing out current input value for next user number input
-    if (!exists(firstOperand)) {
+    else if (!exists(firstOperand)) {
         firstOperand = Number(currentInputValue);
         operator = e.currentTarget.id;
         currentInputValue = 0;
@@ -116,11 +117,6 @@ function operation(e) {
     //If an operator exists, meaning we are in the middle of operations (regular or chaining), compute the answer with existing operands and operator before saving the new operator that was pressed for next calculation. The new operator button acts as an equal sign
     else if (exists(firstOperand) && currentInputValue && operator) {
         compute();
-        operator = e.currentTarget.id;
-        reset();
-    }
-    //The purpose of this is to allow the user to chain operations using their answer from pressing equals
-    else if (endOfCalc) {
         operator = e.currentTarget.id;
         reset();
     }
@@ -140,6 +136,7 @@ function reset() {
     firstOperand = answer; //Answer from previous calculation is stored as first operand
     secondOperand = void 0; //Reset for new input
     currentInputValue = 0; //Reset for new input
+    answer = void 0;
     endOfCalc = false; //Turn off switch because we are computing not by pressing equals button
 }
 
@@ -154,6 +151,8 @@ function compute() {
     if (exists(firstOperand) && !secondOperand && currentInputValue) {
         secondOperand = Number(currentInputValue);
     }
+    //First operands exists but no second operand, default second operand = first operand
+    //For cases where user inputs a number and an operator but nothing else, then presses equals
     else if (exists(firstOperand) && !secondOperand && !currentInputValue) {
         secondOperand = firstOperand;
     }
@@ -163,7 +162,7 @@ function compute() {
         allClear()
         display.textContent = "Divide by zero...?";
     }
-    //Computes only if everything is defined and allow chaining operation
+    //Computes only if everything is defined and allow chaining of operation
     else if (exists(firstOperand) && exists(secondOperand) && operator) {
         answer = operate(operator, firstOperand, secondOperand);
 
@@ -220,6 +219,10 @@ const decimal = document.querySelector(".decimal");
 decimal.addEventListener("click", addDecimal);
 
 function addDecimal(e) {
+    if (endOfCalc) {
+        firstOperand = Number(currentInputValue);
+    }
+
     if (!currentInputValue.toString().includes(".")) {
         const decimalPoint = e.currentTarget.textContent;
         currentInputValue += decimalPoint;
@@ -232,16 +235,14 @@ const sign = document.querySelector(".sign");
 sign.addEventListener("click", invertSign);
 
 function invertSign() {
-    //First part also allows user to invert sign of the result of their computation
-    if (exists(firstOperand) && exists(answer) && !currentInputValue) {
+    //First conditional allows user to invert sign of the result of their computation
+    if (exists(firstOperand) && endOfCalc) {
         if (!firstOperand.toString().includes("-")) {
             firstOperand = Number("-" + firstOperand);
-            answer = firstOperand;
             display.textContent = firstOperand;
         }
         else {
             firstOperand = Number(firstOperand.toString().slice(1));
-            answer = firstOperand;
             display.textContent = firstOperand;
         }
     }
