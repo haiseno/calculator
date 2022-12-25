@@ -1,4 +1,4 @@
-* {
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -21,16 +21,33 @@ body {
 
 .calculator {
     border: 5px solid #ffa500;
+    outline: 3px solid #5a5a5a;
     border-radius: 15px;
-    outline: 5px solid #5a5a5a;
 }
 
-.display {
-    height: 80px;
+.display-box {
+    border-bottom: 1px solid #5a5a5a;
+    overflow: hidden;
+}
+
+.history {
+    height: 50px;
+    padding-right: 18px;
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
+    font-size: 18px;
     border-bottom: 1px solid #5a5a5a;
+}
+
+.display {
+    height: 50px;
+    max-width: 100%;
+    padding-right: 18px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    font-size: 32px;
 }
 
 .buttons {
@@ -80,4 +97,9 @@ button {
 .selected {
     color: #ffa500;
     background-color: white;
+}
+
+button:hover {
+    transition: 0.1s;
+    transform: scale(1.05);
 }

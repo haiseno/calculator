@@ -106,9 +106,9 @@ operators.forEach(operator => operator.addEventListener("click", operation));
 function operation(e) {
     //Allow user to chain operations using result from their previous computation
     if (endOfCalc) {
-        secondOperand = void 0;
         currentInputValue = 0;
-        answer = void 0;
+        secondOperand = undefined;
+        answer = undefined;
         operator = e.currentTarget.id;
         endOfCalc = false;
     }
@@ -139,9 +139,9 @@ function operation(e) {
 //Sets the answer to the calculation as the first operand and resets calculator to be ready for further calculation
 function reset() {
     firstOperand = answer; //Answer from previous calculation is stored as first operand
-    secondOperand = void 0; //Reset for new input
+    secondOperand = undefined; //Reset for new input
     currentInputValue = 0; //Reset for new input
-    answer = void 0;
+    answer = undefined;
     endOfCalc = false; //Turn off switch because we are computing not by pressing equals button
 }
 
@@ -208,10 +208,10 @@ clear.addEventListener("click", allClear)
 function allClear() {
     currentInputValue = 0;
     display.textContent = 0;
-    firstOperand = void 0;
-    secondOperand = void 0;
-    operator = void 0;
-    answer = void 0;
+    firstOperand = undefined;
+    secondOperand = undefined;
+    operator = undefined;
+    answer = undefined;
     endOfCalc = false;
 
     if (!numButtonsEvent) {
@@ -296,14 +296,22 @@ function deleteNumber() {
 //Toggle operator CSS on click
 operators.forEach(operator => operator.addEventListener("click", () => {
     //First, remove selected class from all operators
-    operators.forEach(nonOperator => {
-        if (nonOperator.classList.contains("selected")) {
-            nonOperator.classList.toggle("selected");
-        }
-    });
+    removeSelected();
 
     //If current operator does not have selected class, add it
     if (!operator.classList.contains("selected")) {
         operator.classList.toggle("selected");
     }
 }));
+
+function removeSelected() {
+    operators.forEach(nonOperator => {
+        if (nonOperator.classList.contains("selected")) {
+            nonOperator.classList.toggle("selected");
+        }
+    })
+}
+
+//Remove "selected" effect from operators
+numberButtons.forEach(numberButton => numberButton.addEventListener("click", removeSelected));
+equals.addEventListener("click", removeSelected);
