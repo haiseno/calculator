@@ -54,6 +54,9 @@ function exists(variable) {
     return variable || variable === 0;
 }
 
+let firstOperandLength; //For slicing history content below
+
+const history = document.querySelector(".history");
 const display = document.querySelector(".display");
 const numberButtons = document.querySelectorAll(".number");
 numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
@@ -85,6 +88,8 @@ function input(e) {
     //If user is inputting a number instead of an operator following a computation, the user is likely trying to start a new computation
     //First operand delegation goes here instead of when operator key is pressed
     if (endOfCalc) {
+        //Assign OLD first operand length here for cases where inputted first operand after computation is longer in length than the previous first operand. ex: user computes 2 + 3 (first operand length "2" is 1), then user inputs 600, which would slice the history content an extra 2 characters
+        firstOperandLength = firstOperand.toString().length;
         firstOperand = Number(currentInputValue);
     }
     
@@ -107,15 +112,18 @@ function operation(e) {
     //Allow user to chain operations using result from their previous computation
     if (endOfCalc) {
         currentInputValue = 0;
+        firstOperand = answer;
         secondOperand = undefined;
         answer = undefined;
         operator = e.currentTarget.id;
         endOfCalc = false;
+        history.textContent = `${firstOperand} ${e.currentTarget.textContent}`;
     }
     //Assign current input value to the first operand if undefined, while also clearing out current input value for next user number input
     else if (!exists(firstOperand)) {
         firstOperand = Number(currentInputValue);
         operator = e.currentTarget.id;
+        history.textContent = `${firstOperand} ${e.currentTarget.textContent}`;
         currentInputValue = 0;
     }
     //Allows for chaining of operations and computing the answer to the display without having to press the equals button
@@ -123,11 +131,13 @@ function operation(e) {
     else if (exists(firstOperand) && currentInputValue && operator) {
         compute();
         operator = e.currentTarget.id;
+        history.textContent = `${answer} ${e.currentTarget.textContent}`;
         reset();
     }
     //Allows user to change their operator choice midway through calculation
     else {
         operator = e.currentTarget.id;
+        history.textContent = `${firstOperand} ${e.currentTarget.textContent}`;
     }
 
     //Re-add the event listener for number buttons if it was removed previously during number button input
@@ -152,6 +162,8 @@ equals.addEventListener("click", compute);
 //Pressing equals repeatedly after a calculation also has the added feature of incrementing/decrementing using the last operand and operator in memory
 function compute() {
 
+    let slicedHistory; //For decrementing with the equals button we need to only slice out the first operand in the history content and replace it with a new first operand
+
     //If second operand is undefined, assign current input value as second operand since first operand is already defined
     if (exists(firstOperand) && !secondOperand && currentInputValue) {
         secondOperand = Number(currentInputValue);
@@ -160,6 +172,13 @@ function compute() {
     //For cases where user inputs a number and an operator but nothing else, then presses equals
     else if (exists(firstOperand) && !secondOperand && !currentInputValue) {
         secondOperand = firstOperand;
+    }
+
+    //Set answer from above as first operand for potential chain calculation
+    if (endOfCalc && !currentInputValue) {
+        //Grab OLD first operand length before assigning first operand to previous computation answer for case where the the answer is longer than the old first operand length, which would slice one extra character when history content is sliced below
+        firstOperandLength = firstOperand.toString().length;
+        firstOperand = answer;
     }
 
     //Checks for dividing by zero case
@@ -176,10 +195,16 @@ function compute() {
             answer = decimalRounder(answer);
         }
         
-        //Set answer from above as first operand for potential chain calculation
-        //Also allows for the increment/decremet feature mentioned above by only resetting the values to a semi-initial state, very similar to the reset() function above that is used in operator function
-        firstOperand = answer;
+        //Update display and operation history
         display.textContent = answer;
+        if (!endOfCalc) {
+            history.textContent += ` ${secondOperand} =`
+        }
+        else {
+            slicedHistory = history.textContent.slice(firstOperandLength);
+            history.textContent = `${firstOperand} ${slicedHistory}`;
+        }
+
         currentInputValue = 0
         endOfCalc = true;
     }
@@ -208,11 +233,13 @@ clear.addEventListener("click", allClear)
 function allClear() {
     currentInputValue = 0;
     display.textContent = 0;
+    history.textContent = "";
     firstOperand = undefined;
     secondOperand = undefined;
     operator = undefined;
     answer = undefined;
     endOfCalc = false;
+    removeSelected();
 
     if (!numButtonsEvent) {
         numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
@@ -233,6 +260,7 @@ function addDecimal(e) {
     //If user is attempting to input a decimal following a computation, it is most likely that they are  trying to start a new operation
     //First operand delegation begins here instead of when the operator key is pressed, just like in number input function above
     if (endOfCalc) {
+        firstOperandLength = firstOperand.toString().length; //Assign old first operand length here same reasoning as in number button input function
         firstOperand = currentInputValue;
     }
 }
@@ -243,16 +271,14 @@ sign.addEventListener("click", invertSign);
 
 function invertSign() {
     //This case allows user to invert sign of the result of their computation
-    if (exists(firstOperand) && endOfCalc) {
-        if (!firstOperand.toString().includes("-")) {
-            firstOperand = "-" + firstOperand;
-            display.textContent = firstOperand;
-            currentInputValue = firstOperand;
+    if (exists(answer) && endOfCalc) {
+        if (!answer.toString().includes("-")) {
+            answer = "-" + answer;
+            display.textContent = answer;
         }
         else {
-            firstOperand = firstOperand.toString().slice(1);
-            display.textContent = firstOperand;
-            currentInputValue = firstOperand;
+            answer = answer.toString().slice(1);
+            display.textContent = answer;
         }
     }
     //All other cases
@@ -278,13 +304,29 @@ function deleteNumber() {
     //Does not delete current input value's default 0 to prevent unwanted empty current input value string
     if (currentInputValue === "") {
         currentInputValue = 0;
-        display.textContent = 0;
+        if (exists(answer)) {
+            display.textContent = answer;
+        }
+        else if (exists(firstOperand)) {
+            display.textContent = firstOperand;
+        }
+        else {
+            display.textContent = 0;
+        }
     }
     else if (currentInputValue === "-") {
         currentInputValue = "-0";
-        display.textContent = "-0";
+        if (exists(answer)) {
+            display.textContent = answer;
+        }
+        else if (exists(firstOperand)) {
+            display.textContent = firstOperand;
+        }
+        else {
+            display.textContent = "-0";
+        }
     }
-    else {
+    else if (currentInputValue) {
         display.textContent = currentInputValue;
     }
 
