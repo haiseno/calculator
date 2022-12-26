@@ -165,17 +165,17 @@ function compute() {
     let slicedHistory; //For decrementing with the equals button we need to only slice out the first operand in the history content and replace it with a new first operand
 
     //If second operand is undefined, assign current input value as second operand since first operand is already defined
-    if (exists(firstOperand) && !secondOperand && currentInputValue) {
+    //For normal "operand 1 + operand 2 = " computations
+    if (exists(firstOperand) && !exists(secondOperand) && currentInputValue) {
         secondOperand = Number(currentInputValue);
     }
     //First operands exists but no second operand, default second operand = first operand
     //For cases where user inputs a number and an operator but nothing else, then presses equals
-    else if (exists(firstOperand) && !secondOperand && !currentInputValue) {
+    else if (exists(firstOperand) && !exists(secondOperand) && !currentInputValue) {
         secondOperand = firstOperand;
     }
-
-    //Set answer from above as first operand for potential chain calculation
-    if (endOfCalc && !currentInputValue) {
+    //Set answer from previous computation as first operand for potential chain calculation
+    else if (endOfCalc && !currentInputValue) {
         //Grab OLD first operand length before assigning first operand to previous computation answer for case where the the answer is longer than the old first operand length, which would slice one extra character when history content is sliced below
         firstOperandLength = firstOperand.toString().length;
         firstOperand = answer;
@@ -197,6 +197,7 @@ function compute() {
         
         //Update display and operation history
         display.textContent = answer;
+
         if (!endOfCalc) {
             history.textContent += ` ${secondOperand} =`
         }
