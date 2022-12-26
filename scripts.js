@@ -199,7 +199,12 @@ function compute() {
         display.textContent = answer;
 
         if (!endOfCalc) {
-            history.textContent += ` ${secondOperand} =`
+            if (secondOperand.toString().includes("-")) {
+                history.textContent += ` (${secondOperand}) =`
+            }
+            else {
+                history.textContent += ` ${secondOperand} =`
+            }
         }
         else {
             slicedHistory = history.textContent.slice(firstOperandLength);
@@ -240,7 +245,6 @@ function allClear() {
     operator = undefined;
     answer = undefined;
     endOfCalc = false;
-    removeSelected();
 
     if (!numButtonsEvent) {
         numberButtons.forEach(numberButton => numberButton.addEventListener("click", input));
@@ -336,25 +340,49 @@ function deleteNumber() {
     }
 }
 
-//Toggle operator CSS on click
-operators.forEach(operator => operator.addEventListener("click", () => {
-    //First, remove selected class from all operators
-    removeSelected();
+//CSS effects
 
+//Toggle operator CSS on click to highlight selected operator
+operators.forEach(operator => operator.addEventListener("click", () => {
+    removeSelected();
     //If current operator does not have selected class, add it
-    if (!operator.classList.contains("selected")) {
-        operator.classList.toggle("selected");
+    if (!operator.classList.contains("operator-selected")) {
+        operator.classList.toggle("operator-selected");
     }
 }));
 
+//Background color fade in and out effect for number buttons
+numberButtons.forEach(number => number.addEventListener("click", () => {
+   removeSelected();
+   number.style.cssText = "background-color: #aaaaaa;"
+   window.setTimeout(() => number.style.cssText = "background-color: #3a3b3c;", 250);
+}));
+
+decimal.addEventListener("click", () => {
+    removeSelected();
+    decimal.style.cssText = "background-color: #aaaaaa;"
+    window.setTimeout(() =>  decimal.style.cssText = "background-color: #3a3b3c;", 250);
+})
+
+//Same effect as above but for clear, delete, and invert sign buttons
+const rowFiveChildren = document.querySelectorAll(".row.five > .non-operator");
+rowFiveChildren.forEach(child => child.addEventListener("click", () => {
+    removeSelected();
+    child.style.cssText = "background-color: #d3d3d3;"
+    window.setTimeout(() => child.style.cssText = "background-color: #808080;", 250);
+}));
+
+equals.addEventListener("click", () => {
+    removeSelected();
+    equals.style.cssText = "background-color: white; color: #ffa500;"
+    window.setTimeout(() =>  equals.style.cssText = "background-color: #ffa500; color: white;", 250);
+})
+
+//Removes selected highlight from operator buttons
 function removeSelected() {
     operators.forEach(nonOperator => {
-        if (nonOperator.classList.contains("selected")) {
-            nonOperator.classList.toggle("selected");
+        if (nonOperator.classList.contains("operator-selected")) {
+            nonOperator.classList.toggle("operator-selected");
         }
     })
 }
-
-//Remove "selected" effect from operators
-numberButtons.forEach(numberButton => numberButton.addEventListener("click", removeSelected));
-equals.addEventListener("click", removeSelected);

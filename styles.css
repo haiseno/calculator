@@ -66,6 +66,7 @@ button {
     border-radius: 50%;
     border: none;
     cursor: pointer;
+    transition: all 0.25s ease-in-out;
 }
 
 .non-operator {
@@ -94,12 +95,11 @@ button {
     border-radius: 25px;
 }
 
-.selected {
+.operator-selected {
     color: #ffa500;
     background-color: white;
 }
 
 button:hover {
-    transition: 0.1s;
     transform: scale(1.05);
 }
