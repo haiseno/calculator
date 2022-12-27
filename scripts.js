@@ -109,10 +109,13 @@ operators.forEach(operator => operator.addEventListener("click", operation));
 
 //Store the operator for operation and current input value as operands, computes the operation without needing to press equals button when chaining operations
 function operation(e) {
+
     //Allow user to chain operations using result from their previous computation
     if (endOfCalc) {
+        if (!currentInputValue) { //Only assign first operand here if user did not input a new value before pressing operator button aka not starting a new operation
+            firstOperand = answer;
+        }
         currentInputValue = 0;
-        firstOperand = answer;
         secondOperand = undefined;
         answer = undefined;
         operator = e.currentTarget.id;
@@ -279,7 +282,7 @@ sign.addEventListener("click", invertSign);
 
 function invertSign() {
     //This case allows user to invert sign of the result of their computation
-    if (exists(answer) && endOfCalc) {
+    if (exists(answer) && endOfCalc && !currentInputValue) {
         if (!answer.toString().includes("-")) {
             answer = "-" + answer;
             display.textContent = answer;
@@ -287,6 +290,20 @@ function invertSign() {
         else {
             answer = answer.toString().slice(1);
             display.textContent = answer;
+        }
+    }
+    //First operand delegation here because this is the only way for user to input a negative number when starting a new operation after just finishing one, overrides the end of calc first operand delegation in the input function
+    else if (endOfCalc) {
+        if (!currentInputValue.toString().includes("-")) {
+            currentInputValue = "-" + currentInputValue;
+            firstOperand = Number(currentInputValue);
+            display.textContent = currentInputValue;
+        }
+        //Otherwise, if it's already negative, remove the negative sign
+        else {
+            currentInputValue = currentInputValue.slice(1);
+            firstOperand = Number(currentInputValue);
+            display.textContent = currentInputValue;
         }
     }
     //All other cases
