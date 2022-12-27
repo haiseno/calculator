@@ -194,7 +194,10 @@ function compute() {
         if (hasDecimal(answer)) {
             answer = decimalRounder(answer);
         }
-        
+        else if (answer.toString().length >= 9) {
+            answer = answer.toExponential(2);
+        }
+
         //Update display and operation history
         display.textContent = answer;
 

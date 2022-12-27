@@ -20,24 +20,24 @@ body {
 }
 
 .calculator {
+    width: 234px;
     border: 5px solid #ffa500;
     outline: 3px solid #5a5a5a;
     border-radius: 15px;
 }
 
 .display-box {
-    border-bottom: 1px solid #5a5a5a;
+    height: 80px;
     overflow: hidden;
 }
 
 .history {
-    height: 50px;
+    height: 30px;
     padding-right: 18px;
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
     font-size: 18px;
-    border-bottom: 1px solid #5a5a5a;
 }
 
 .display {
@@ -46,7 +46,7 @@ body {
     padding-right: 18px;
     display: flex;
     justify-content: flex-end;
-    align-items: flex-end;
+    align-items: center;
     font-size: 32px;
 }
 
