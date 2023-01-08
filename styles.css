@@ -1,4 +1,4 @@
-*, *::before, *::after {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -6,7 +6,6 @@
 
 body {
     font-family: "Helvetica Neue", Helvetica, sans-serif;
-    font-size: 25px;
     color: white;
     background-color: black;
 }
@@ -20,34 +19,33 @@ body {
 }
 
 .calculator {
-    width: 234px;
     border: 5px solid #ffa500;
     outline: 3px solid #5a5a5a;
     border-radius: 15px;
+    padding: 3px;
 }
 
 .display-box {
-    height: 80px;
     overflow: hidden;
+    white-space: nowrap;
+    padding-right: 18px;
 }
 
 .history {
     height: 30px;
-    padding-right: 18px;
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
-    font-size: 18px;
+    font-size: 1rem;
 }
 
 .display {
     height: 50px;
     max-width: 100%;
-    padding-right: 18px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    font-size: 32px;
+    font-size: 2rem;
 }
 
 .buttons {
@@ -62,8 +60,9 @@ body {
 button {
     width: 50px;
     height: 50px;
-    margin: 3px;
+    margin: 2px;
     border-radius: 50%;
+    font-size: 1rem;
     border: none;
     cursor: pointer;
     transition: all 0.25s ease-in-out;
@@ -72,21 +71,17 @@ button {
 .non-operator {
     color: white;
     background-color: #3a3b3c;
-    font-size: 18px;
 }
 
 .row.five > .non-operator {
     color: black;
     background-color: #808080;
-    font-size: 15px;
-    font-weight: normal;
 }
 
 .operator,
 .equal {
     color: white;
     background-color: #ffa500;
-    font-size: 20px;
     font-weight: bold;
 }
 
